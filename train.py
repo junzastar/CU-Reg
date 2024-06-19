@@ -20,8 +20,8 @@ from lib.utils import setup_logger
 from tensorboardX import SummaryWriter
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--dataset', type=str, default = 'CAMUS', help='ycb or linemod')
-parser.add_argument('--dataset_root', type=str, default = '', help='dataset root dir (''YCB_Video_Dataset'' or ''Linemod_preprocessed'')')
+parser.add_argument('--dataset', type=str, default = 'CAMUS', help='')
+parser.add_argument('--dataset_root', type=str, default = '', help='dataset root dir ()')
 parser.add_argument('--batch_size', type=int, default = 24, help='batch size')
 parser.add_argument('--workers', type=int, default = 10, help='number of data loading workers')
 parser.add_argument('--lr', default=0.00005, help='learning rate')
@@ -32,7 +32,7 @@ parser.add_argument('--decay_margin', default=0.016, help='margin to decay lr & 
 parser.add_argument('--noise_trans', default=0.03, help='range of the random noise of translation added to the training data')
 parser.add_argument('--iteration', type=int, default = 2, help='number of refinement iterations')
 parser.add_argument('--nepoch', type=int, default=500, help='max number of epochs to train')
-parser.add_argument('--resume_posenet', type=str, default = '',  help='resume PoseNet model') #之前训练已经保存的posenet模型
+parser.add_argument('--resume_posenet', type=str, default = '',  help='resume PoseNet model') 
 parser.add_argument('--start_epoch', type=int, default = 1, help='which epoch to start')
 parser.add_argument('--use_img_similarity', type=bool, default =True, help='')
 opt = parser.parse_args()
@@ -47,17 +47,11 @@ def main():
     torch.manual_seed(opt.manualSeed)
 
     if opt.dataset == 'CAMUS':
-        opt.outf = './experiments_Prompt_plusInterfplusDFplusGatedNoTF/trained_models/' + opt.dataset #folder to save trained models
-        opt.log_dir = './experiments_Prompt_plusInterfplusDFplusGatedNoTF/logs/' + opt.dataset + '/logtxt'#folder to save logs
-        opt.train_info_dir = './experiments_Prompt_plusInterfplusDFplusGatedNoTF/logs/' + opt.dataset + '/train_info' #folder to save logs
-        opt.repeat_epoch = 2 #number of repeat times for one epoch training
-        opt.dataset_root = '/home/jun/Desktop/project/slice2volume/dataset/CAMUS-0129-NEW'
-    elif opt.dataset == 'CLUST':
         opt.outf = './experiments/trained_models/' + opt.dataset #folder to save trained models
         opt.log_dir = './experiments/logs/' + opt.dataset + '/logtxt'#folder to save logs
         opt.train_info_dir = './experiments/logs/' + opt.dataset + '/train_info' #folder to save logs
-        opt.repeat_epoch = 1 #number of repeat times for one epoch training
-        opt.dataset_root = '/home/jun/Desktop/project/slice2volume/dataset/CLUST-0119'
+        opt.repeat_epoch = 2 #number of repeat times for one epoch training
+        opt.dataset_root = './dataset/CAMUS'
     else:
         print('Unknown dataset')
         return
@@ -73,12 +67,11 @@ def main():
     estimator = RegistNetwork(layers=[3, 8, 36, 3])
     estimator.cuda()
     
-    #是否加载前面训练的posenet模型
     if opt.resume_posenet != '':
         print("resume_posenet: ", opt.resume_posenet)
         estimator.load_state_dict(torch.load('{0}/{1}'.format(opt.outf, opt.resume_posenet)))
     
-    opt.decay_start = False #还没开始衰减
+    opt.decay_start = False
     optimizer = optim.Adam(estimator.parameters(), lr=opt.lr)
     
     dataset = PoseDataset_s2v('train', opt.dataset_root)
@@ -91,9 +84,9 @@ def main():
     criterion = regularization_loss().to(device)
 
 
-    best_test = np.Inf #训练之前将loss设置为无穷大
+    best_test = np.Inf 
     
-    #如果开始训练的epoch为1，则视为重头开始训练，就将之前训练的log文件全都删除。并记录开始时间
+    
     if opt.start_epoch == 1:
         for log in os.listdir(opt.log_dir):
             os.remove(os.path.join(opt.log_dir, log))
@@ -101,11 +94,11 @@ def main():
 
     it = 0
 
-    for epoch in range(opt.start_epoch, opt.nepoch): #开始训练的epoch和最大的epoch
-        #保存每次训练的log文件
+    for epoch in range(opt.start_epoch, opt.nepoch): 
+        
         logger = setup_logger('epoch%d' % epoch, os.path.join(opt.log_dir, 'epoch_%d_log.txt' % epoch))
         logger.info('Train time {0}'.format(time.strftime("%Hh %Mm %Ss", time.gmtime(time.time() - st_time)) + ', ' + 'Training started'))
-        train_count = 0 #记录训练次数
+        train_count = 0 
         train_dis_avg = 0.0
         train_ncc_avg = 0.0
         train_param_t_avg = 0.0
@@ -116,9 +109,9 @@ def main():
         
         
         estimator.train()
-        optimizer.zero_grad() #将梯度初始化为0
+        optimizer.zero_grad() 
 
-        for rep in range(opt.repeat_epoch): #每个epoch重复训练的次数
+        for rep in range(opt.repeat_epoch): 
             for i, data in enumerate(dataloader, 0):
                 case_id, vol_tensor, frame_tensor, mat_tensor, dof_tensor, relative_trans, slice_mask = data
                 # print("case_id: ", case_id)
@@ -201,16 +194,16 @@ def main():
 
         print('>>>>>>>>----------epoch {0} train finish---------<<<<<<<<'.format(epoch))
 
-        #保存每次测试的log文件
+        
         logger = setup_logger('epoch%d_test' % epoch, os.path.join(opt.log_dir, 'epoch_%d_test_log.txt' % epoch))
         logger.info('Test time {0}'.format(time.strftime("%Hh %Mm %Ss", time.gmtime(time.time() - st_time)) + ', ' + 'Testing started'))
         test_dis = 0.0
         test_ncc = 0.0
         test_count = 0
-        #构建验证模型
+        
         estimator.eval()
         
-        #下面是对测试数据集进行测试的过程
+        
         for j, data in enumerate(testdataloader, 0):
             case_id, vol_tensor, frame_tensor, mat_tensor, dof_tensor, relative_trans, slice_mask = data
             case_id, vol_tensor, frame_tensor, mat_tensor, dof_tensor, relative_trans, slice_mask = case_id.cuda(), \
@@ -242,7 +235,7 @@ def main():
         val_dict['Ncc'] = test_ncc
         writer.add_scalars('val_acc', val_dict, it)
 
-        #测试过程结束，到此，就完成了每次epoch的训练和测试步骤
+        
         logger.info('Test time {0} Epoch {1} TEST FINISH Avg dis: {2} Avg ncc: {3}'.format(time.strftime("%Hh %Mm %Ss", time.gmtime(time.time() - st_time)), epoch, test_dis, test_ncc))
         if test_dis <= best_test:
             best_test = test_dis

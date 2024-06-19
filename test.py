@@ -23,12 +23,12 @@ import cv2
 from lib.loss import transformation_parameter_NCC
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--dataset', type=str, default = 'CAMUS', help='ycb or linemod')
-parser.add_argument('--dataset_root', type=str, default = '', help='dataset root dir (''YCB_Video_Dataset'' or ''Linemod_preprocessed'')')
+parser.add_argument('--dataset', type=str, default = 'CAMUS', help='')
+parser.add_argument('--dataset_root', type=str, default = '', help='dataset root dir ()')
 parser.add_argument('--batch_size', type=int, default = 1, help='batch size')
 parser.add_argument('--workers', type=int, default = 10, help='number of data loading workers')
 parser.add_argument('--results', type=str, default = '', help='dataset root dir')
-parser.add_argument('--model', type=str, default = 'pose_model_406_3.656168441172922.pth',  help='resume PoseNet model') #之前训练已经保存的posenet模型
+parser.add_argument('--model', type=str, default = 'pose_model_406_3.656168441172922.pth',  help='resume PoseNet model')
 parser.add_argument('--use_img_similarity', type=bool, default =True, help='')
 opt = parser.parse_args()
 
@@ -42,19 +42,12 @@ def main():
     torch.manual_seed(opt.manualSeed)
 
     if opt.dataset == 'CAMUS':
-        opt.outf = './experiments_Prompt_plusInterfplusDFplusGatedNoTF/trained_models/' + opt.dataset #folder to save trained models
-        opt.log_dir = './experiments_Prompt_plusInterfplusDFplusGatedNoTF/logs/' + opt.dataset + '/logtxt'#folder to save logs
-        opt.results = './experiments_Prompt_plusInterfplusDFplusGatedNoTF/results/' + opt.dataset  #folder to save logs
-        opt.train_info_dir = './experiments_Prompt_plusInterfplusDFplusGatedNoTF/logs/' + opt.dataset + '/train_info' #folder to save logs
-        opt.repeat_epoch = 1 #number of repeat times for one epoch training
-        opt.dataset_root = '/home/jun/Desktop/project/slice2volume/dataset/CAMUS-0129-NEW'
-    elif opt.dataset == 'CLUST':
         opt.outf = './experiments/trained_models/' + opt.dataset #folder to save trained models
         opt.log_dir = './experiments/logs/' + opt.dataset + '/logtxt'#folder to save logs
-        opt.results = './experiments_final/results/' + opt.dataset  #folder to save logs
+        opt.results = './experiments/results/' + opt.dataset  #folder to save logs
         opt.train_info_dir = './experiments/logs/' + opt.dataset + '/train_info' #folder to save logs
         opt.repeat_epoch = 1 #number of repeat times for one epoch training
-        opt.dataset_root = '/home/jun/Desktop/project/slice2volume/dataset/CLUST-0119'
+        opt.dataset_root = './dataset/CAMUS'
     else:
         print('Unknown dataset')
         return
@@ -68,7 +61,7 @@ def main():
     estimator = RegistNetwork(layers=[3, 8, 36, 3])
     
     
-    #是否加载前面训练的posenet模型
+    
     
     print("model: '{0}/{1}".format(opt.outf, opt.model))
         
@@ -84,7 +77,7 @@ def main():
     criterion = regularization_loss().to(device)
 
     
-    #如果开始训练的epoch为1，则视为重头开始训练，就将之前训练的log文件全都删除。并记录
+    
     st_time = time.time()
 
     #保存每次测试的log文件
@@ -97,10 +90,10 @@ def main():
     t_err = 0.0
     r_err = 0.0
     ncc_param = 0.0
-    #构建验证模型
+    
     estimator.eval()
     
-    #下面是对测试数据集进行测试的过程
+    
     with torch.no_grad():
         for j, data in enumerate(testdataloader, 0):
             case_id, vol_tensor, frame_tensor, mat_tensor, dof_tensor, relative_trans, slice_mask = data
@@ -177,7 +170,7 @@ def main():
     t_err = t_err / test_count
     r_err = r_err / test_count
     ncc_param = ncc_param / test_count
-    #测试过程结束，到此，就完成了每次epoch的训练和测试步骤
+    
     logger.info('Runtime {0} Avg dis: {1} Avg ncc: {2} Avg ssim: {3} Avg trans: {4} Avg rot: {5} Avg param_ncc: {6}'
                 .format((time.time() - st_time) / test_count, test_dis, test_ncc * 100.0, test_sim * 100.0, t_err, r_err, ncc_param * 100.0))
 
