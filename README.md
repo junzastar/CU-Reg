@@ -2,7 +2,7 @@
 This is the PyTorch implementation of MICCAI'24 paper.
 
 <p align="center">
-<img src="figures/pipeline.pdf" alt="intro" width="100%"/>
+<img src="figures/pipeline.png" alt="intro" width="100%"/>
 </p>
 
 ## Abstract
