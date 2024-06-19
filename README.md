@@ -30,7 +30,7 @@ pip install -r requirements.txt
 Download the processed CAMUS dataset, you can download it [here](https://github.com/junzastar/CU-Reg.git).
 
 ## Evaluation
-Please download our trained model [here](https://github.com/junzastar/CU-Reg.git) and put it in the 'CU_Reg/pre_trained/trained_models' directory. Then, you can have a quick evaluation using the following command.
+Please download our trained model [here](https://github.com/junzastar/CU-Reg.git) and put it in the 'experiments/trained_models' directory. Then, you can have a quick evaluation using the following command.
 ```bash
 python test.py
 ```
@@ -48,10 +48,7 @@ If you find the code useful, please cite our paper.
 ```latex
 
 ```
-Any questions, please feel free to contact
-Long Lei (longlei@cuhk.edu.hk), \
-Jun Zhou (zachary-jun.zhou@connect.polyu.hk), \
-Jialun Pei (jialunpei@cuhk.edu.hk).
+Any questions, please feel free to contact: Long Lei (longlei@cuhk.edu.hk)
 
 ## Acknowledgment
 Our code is developed based on [FVR-Net](https://github.com/DIAL-RPI/FVR-Net.git).
