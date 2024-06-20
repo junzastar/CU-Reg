@@ -1,17 +1,16 @@
 # [MICCAI'24] Epicardium Prompt-guided Real-time Cardiac Ultrasound Frame-to-volume Registration
-This is the PyTorch implementation of MICCAI'24 paper.
 
 <p align="center">
 <img src="figures/pipeline.png" alt="intro" width="100%"/>
 </p>
 
-## Abstract
-> A comprehensive guidance view for cardiac interventional surgery can be provided by the real-time fusion of the intraoperative 2D images and preoperative 3D volume based on the ultrasound frame-to-volume registration. 
-However, cardiac ultrasound images are characterized by a low signal-to-noise ratio and small differences between adjacent frames, coupled with significant dimension variations between 2D frames and 3D volumes to be registered, resulting in real-time and accurate cardiac ultrasound frame-to-volume registration being a very challenging task. 
-This paper introduces a lightweight end-to-end Cardiac Ultrasound frame-to-volume Registration network, termed CU-Reg.
-Specifically, the proposed model leverages epicardium prompt-guided anatomical clues to reinforce the interaction of 2D sparse and 3D dense features, followed by a voxel-wise local-global aggregation of enhanced features, thereby boosting the cross-dimensional matching effectiveness of low-quality ultrasound modalities. 
-We further embed an inter-frame discriminative regularization term within the hybrid supervised learning to increase the distinction between adjacent slices in the same ultrasound volume to ensure registration stability. 
-Experimental results on the reprocessed CAMUS dataset demonstrate that our CU-Reg surpasses existing methods in terms of registration accuracy and efficiency, meeting the guidance requirements of clinical cardiac interventional surgery. 
+Official Implementation of "[Epicardium Prompt-guided Real-time Cardiac Ultrasound Frame-to-volume Registration]()"
+
+[Long Lei](https://scholar.google.com/citations?user=yB7qfigAAAAJ&hl=zh-CN&oi=ao), [Jun Zhou](https://scholar.google.com/citations?hl=zh-CN&user=pEgMa-UAAAAJ), [Jialun Pei](https://scholar.google.com/citations?user=1lPivLsAAAAJ&hl=en), [Baoliang Zhao](https://scholar.google.com/citations?hl=zh-CN&user=e1Z-HpgAAAAJ), [Yueming Jin](https://yuemingjin.github.io/), [Yuen-Chun Jeremy Teoh](https://www.med.cuhk.edu.hk/staff/dr-teoh-yuen-chun-jeremy), [Jing Qin](https://harry-qinjing.github.io/), and [Pheng-Ann Heng](https://scholar.google.com/citations?user=OFdytjoAAAAJ&hl=zh-CN)
+
+[[Paper]](); [Official Version]()
+
+**Contact:** longlei@cuhk.edu.hk, peijialun@gmail.com
 
 ## Installation
 **Conda virtual environment**
@@ -48,7 +47,6 @@ If you find the code useful, please cite our paper.
 ```latex
 
 ```
-Any questions, please feel free to contact: Long Lei (longlei@cuhk.edu.hk)
 
 ## Acknowledgment
 Our code is developed based on [FVR-Net](https://github.com/DIAL-RPI/FVR-Net.git).
