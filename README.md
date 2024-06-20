@@ -27,7 +27,7 @@ pip install -r requirements.txt
 ```
 
 ## Dataset
-Download the processed CAMUS dataset, you can download it [here](https://github.com/junzastar/CU-Reg.git).
+Download the processed CAMUS dataset, you can download it [here](https://drive.google.com/drive/folders/1dln50wujTLGQW0tTM5HibSdF7ZYrWRsM?usp=drive_link).
 
 ## Evaluation
 Please download our trained model [here](https://github.com/junzastar/CU-Reg.git) and put it in the 'experiments/trained_models' directory. Then, you can have a quick evaluation using the following command.
