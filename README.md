@@ -45,7 +45,12 @@ python train.py
 ## Citation
 If you find the code useful, please cite our paper.
 ```latex
-
+@article{lei2024epicardium,
+      title={Epicardium Prompt-guided Real-time Cardiac Ultrasound Frame-to-volume Registration}, 
+      author={Long Lei and Jun Zhou and Jialun Pei and Baoliang Zhao and Yueming Jin and Yuen-Chun Jeremy Teoh and Jing Qin and Pheng-Ann Heng},
+      journal={arXiv preprint arXiv:2406.14534},
+      year={2024},
+}
 ```
 
 ## Acknowledgment
