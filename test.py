@@ -28,7 +28,7 @@ parser.add_argument('--dataset_root', type=str, default = '', help='dataset root
 parser.add_argument('--batch_size', type=int, default = 1, help='batch size')
 parser.add_argument('--workers', type=int, default = 10, help='number of data loading workers')
 parser.add_argument('--results', type=str, default = '', help='dataset root dir')
-parser.add_argument('--model', type=str, default = 'pose_model_406_3.656168441172922.pth',  help='resume PoseNet model')
+parser.add_argument('--model', type=str, default = 'trained_model_CU-reg.pth',  help='resume PoseNet model')
 parser.add_argument('--use_img_similarity', type=bool, default =True, help='')
 opt = parser.parse_args()
 
